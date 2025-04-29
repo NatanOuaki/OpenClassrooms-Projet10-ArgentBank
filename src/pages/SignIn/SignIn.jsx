@@ -1,68 +1,69 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import Layout from "../../components/Layout/Layout.jsx";
-import "./SignIn.css"; 
+// src/pages/SignIn/SignIn.jsx
+import './SignIn.css'
+import { useDispatch, useSelector } from 'react-redux'
+import { loginUser } from '../../redux/authSlice'
+import { useNavigate } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faUserCircle } from '@fortawesome/free-solid-svg-icons'
 
-const SignIn = () => {
-    const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
-    const [rememberMe, setRememberMe] = useState(false);
+function SignIn() {
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
+    const { isLoggedIn, loading, error } = useSelector((state) => state.auth)
+    const [form, setForm] = useState({ email: '', password: '' })
 
-    const navigate = useNavigate();
+    useEffect(() => {
+        if (isLoggedIn) {
+        navigate('/user')
+        }
+    }, [isLoggedIn, navigate])
 
     const handleSubmit = (e) => {
-        e.preventDefault();
-        // Placeholder login logic
-        console.log("Username:", username);
-        console.log("Password:", password);
-        console.log("Remember me:", rememberMe);
-        
-        // Redirect to user page (update route as needed)
-        navigate("/user");
+        e.preventDefault()
+        dispatch(loginUser(form))
     }
-    return(
+
+    return (
         <>
-            <div className="main bg-dark">
-                <section className="sign-in-content">
-                    <i className="fa fa-user-circle sign-in-icon"></i>
-                    <h1>Sign In</h1>
-                    <form onSubmit={handleSubmit}>
-                        <div className="input-wrapper">
-                        <label htmlFor="username">Username</label>
-                        <input 
-                            type="text" 
-                            id="username" 
-                            value={username}
-                            onChange={(e) => setUsername(e.target.value)}
-                        />
-                        </div>
-
-                        <div className="input-wrapper">
-                        <label htmlFor="password">Password</label>
-                        <input 
-                            type="password" 
-                            id="password" 
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                        />
-                        </div>
-
-                        <div className="input-remember">
-                        <input 
-                            type="checkbox" 
-                            id="remember-me"
-                            checked={rememberMe}
-                            onChange={(e) => setRememberMe(e.target.checked)}
-                        />
-                        <label htmlFor="remember-me">Remember me</label>
-                        </div>
-
-                        <button type="submit" className="sign-in-button">Sign In</button>
-                    </form>
-                </section>
-            </div>
+            <main className="main bg-dark">
+            <section className="sign-in-content">
+                <FontAwesomeIcon icon={faUserCircle} className="sign-in-icon" />
+                <h1>Sign In</h1>
+                <form onSubmit={handleSubmit}>
+                <div className="input-wrapper">
+                    <label htmlFor="email">Email</label>
+                    <input
+                    type="text"
+                    id="email"
+                    value={form.email}
+                    onChange={(e) => setForm({ ...form, email: e.target.value })}
+                    required
+                    />
+                </div>
+                <div className="input-wrapper">
+                    <label htmlFor="password">Password</label>
+                    <input
+                    type="password"
+                    id="password"
+                    value={form.password}
+                    onChange={(e) => setForm({ ...form, password: e.target.value })}
+                    required
+                    />
+                </div>
+                <div className="input-remember">
+                    <input type="checkbox" id="remember-me" />
+                    <label htmlFor="remember-me">Remember me</label>
+                </div>
+                {error && <p className="error">{error}</p>}
+                <button className="sign-in-button" type="submit" disabled={loading}>
+                    {loading ? 'Loading...' : 'Sign In'}
+                </button>
+                </form>
+            </section>
+            </main>
         </>
-    );
-};
+    )
+}
 
-export default SignIn;
+export default SignIn
