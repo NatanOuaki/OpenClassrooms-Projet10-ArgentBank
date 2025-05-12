@@ -14,6 +14,8 @@ function Header() {
     const navigate = useNavigate()
     const { isLoggedIn } = useSelector((state) => state.auth)
     const { firstName } = useSelector((state) => state.user)
+    const { userName } = useSelector((state) => state.user)
+
 
     const handleLogout = () => {
         dispatch(logout())
@@ -34,7 +36,7 @@ function Header() {
             {isLoggedIn ? (
             <>
                 <NavLink className="main-nav-item" to="/user">
-                    <FontAwesomeIcon icon={faUserCircle} /> {firstName}
+                    <FontAwesomeIcon icon={faUserCircle} /> {userName}
                 </NavLink>
                 <NavLink className="main-nav-item" to="/" onClick={handleLogout}>
                     <FontAwesomeIcon icon={faSignOutAlt} /> Sign Out

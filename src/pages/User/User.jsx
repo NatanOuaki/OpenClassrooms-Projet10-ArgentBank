@@ -11,7 +11,7 @@ import Account from '../../components/Account/Account'
 function User() {
     const dispatch = useDispatch()
     const navigate = useNavigate()
-    const { userName, firstName, lastName } = useSelector((state) => state.user)
+    const { userName } = useSelector((state) => state.user)
     const { isLoggedIn } = useSelector((state) => state.auth)
 
     const [editing, setEditing] = useState(false)
@@ -37,7 +37,7 @@ function User() {
                 <>
                     <h1>
                     Welcome back<br />
-                    {firstName} {lastName}!
+                    {userName}!
                     </h1>
                     <button className="edit-button" onClick={() => setEditing(true)}>
                     Edit Name
